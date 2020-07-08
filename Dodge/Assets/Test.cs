@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+﻿/*using UnityEditor;
 using UnityEngine;
 
 public class Test : EditorWindow
@@ -20,4 +20,4 @@ public class Test : EditorWindow
 		Handles.DrawSolidDisc(new Vector3(150, 150, 0), Vector3.forward, 50);
 		Handles.DrawSolidDisc(new Vector3(250, 150, 0), Vector3.forward, 50);
 	}
-}
+} */

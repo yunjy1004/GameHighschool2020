@@ -5,10 +5,15 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    ////가장 간단한 싱글톤...;
+    //public static GameManager instance;
+    //void Awake()
+    //{
+    //    instance = this;
+    //}
 
     public Text m_ScoreUI;
-    public Text m_RestartUi;
+    public Text m_RestartUI;
 
     public PlayerController m_PlayerController;
     public List<GameObject> m_BulletSpawners;
@@ -16,17 +21,73 @@ public class GameManager : MonoBehaviour
     public bool m_IsPlaying;
     public float m_Score;
 
-    void Start()
+    private void Start() //씬 시작시
     {
+        GameStart(); //게임 시작
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if (m_IsPlaying) {
+        //시간당 점수업
+        if (m_IsPlaying)
+        {
             m_Score = m_Score + Time.deltaTime;
             m_ScoreUI.text = string.Format("Score : {0}", m_Score);
         }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                GameStart();
+            }
+        }
+    }
+
+    public void GameStart() //게임 시작되면
+    {
+        m_IsPlaying = true; //플레이를 활성화하고
+        m_Score = 0f;       //스코어 0으로 변경
+        m_RestartUI.gameObject.SetActive(false);      //리스타트 UI 비활성화
+        m_PlayerController.gameObject.SetActive(true); //플레이어 활성화
+
+        //불렛스포너를 활성화
+        for(int i=0; i<m_BulletSpawners.Count; i++)
+        {
+            m_BulletSpawners[i].gameObject.SetActive(true);
+        }
+    }
+
+    public void GameOver() //게임 오버가 되면
+    {
+        m_IsPlaying = false; //플레이어 상태
+        m_RestartUI.gameObject.SetActive(true); //리스타트 UI 활성화
+        m_PlayerController.gameObject.SetActive(false); //플레이어 비활성화
+        //불렛스포너들 비활성화
+        for (int i = 0; i < m_BulletSpawners.Count; i++)
+        {
+            m_BulletSpawners[i].gameObject.SetActive(false);
+        }
+        //총알 제거
+        Bullet[] bullets = FindObjectsOfType<Bullet>();
+
+        for (int i = 0; i < bullets.Length; i++)
+        {
+            Destroy(bullets[i].gameObject); //Destroy(게임오브젝트) 게임오브젝트를 제거하는
+        }
+
+        //TOPScore 키를 가지고 최고점 가지고 옴
+        float topScore = PlayerPrefs.GetFloat("TopScore", 0);
+        if (topScore < m_Score)       //현재 내가 낸 점수가 최고 기록 높으면
+        {
+            topScore = m_Score;       //내가 낸 점수로 최고을 변경
+        }
+        PlayerPrefs.SetFloat("TopScore", topScore); //TopScore에 최고점을 저장하고
+        PlayerPrefs.Save(); //저장.
+
+        m_RestartUI.text
+            = string.Format("게임오버\n최고점 : (0)\n다시 시작하시려면 R버튼 누르세요.", topScore);
+
+
     }
 }
