@@ -1,6 +1,7 @@
-﻿/*using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
-
+#if UNITY_EDITOR
+//주석 처리
 public class Test : EditorWindow
 {
 	// Add menu named "My Window" to the Window menu
@@ -20,4 +21,5 @@ public class Test : EditorWindow
 		Handles.DrawSolidDisc(new Vector3(150, 150, 0), Vector3.forward, 50);
 		Handles.DrawSolidDisc(new Vector3(250, 150, 0), Vector3.forward, 50);
 	}
-} */
+}
+#endif

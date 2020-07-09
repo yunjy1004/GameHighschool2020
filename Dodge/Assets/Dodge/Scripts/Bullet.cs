@@ -36,7 +36,18 @@ public class Bullet : MonoBehaviour
         if (other.attachedRigidbody != null && other.attachedRigidbody.tag == "Player")
         {
             var player = other.attachedRigidbody.GetComponent<PlayerController>();
-            player.Die();
+            var player_dunguen = other.attachedRigidbody.GetComponent<PlayerController_Dungeon>();
+
+            if(player_dunguen != null)
+                player_dunguen.Die();
+
+            if (player != null)
+                player.Die();
+        }
+        else if(other.tag != "Enemy")
+        {
+            
+            Destroy(gameObject);
         }
     }
 }
