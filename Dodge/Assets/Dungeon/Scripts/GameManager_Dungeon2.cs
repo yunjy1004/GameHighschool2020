@@ -1,4 +1,5 @@
-﻿ using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,12 +12,16 @@ public class GameManager_Dungeon2 : MonoBehaviour
     public Text m_ClearUI;
     public Text m_ScoreUI;
 
+    public float m_Score;
+    public bool m_isPlaying;
+
     private void Start()
     {
         GameStart();
     }
     public void GameStart()
     {
+        m_isPlaying = true;
         //출발시점에서 플레이어가 스폰
         m_Player.gameObject.SetActive(true);
         m_Player.transform.position = m_StartPoint.position;
@@ -27,12 +32,96 @@ public class GameManager_Dungeon2 : MonoBehaviour
         m_ScoreUI.gameObject.SetActive(true);
     }
 
+    void Update()
+    {
+        //시간당 점수업
+        if (m_isPlaying)
+        {
+            m_Score = m_Score + Time.deltaTime;
+            m_ScoreUI.text = string.Format("Score : {0}", m_Score);
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                GameStart();
+            }
+        }
+    }
+
+
     public void GameClear()
     {
+        m_isPlaying = false;
         //플레이어가 비활성화된다.
+        m_Player.gameObject.SetActive(false);
         //게임 클리어 메세지가 보인다.
+        m_ClearUI.gameObject.SetActive(true);
         //게임 스코어 메세지가 보인다.
+        m_ScoreUI.gameObject.SetActive(true);
+
+        //활성화된 적은 비활성화
+        var enemisType1 = FindObjectsOfType<RotationBulletSpawner>();
+        foreach (var enemy in enemisType1)
+        {
+            enemy.gameObject.SetActive(false);
+        }
+
+        var enemisType2 = FindObjectsOfType<BulletSpawner>();
+        foreach (var enemy in enemisType2)
+        {
+            enemy.gameObject.SetActive(false);
+        }
+
+        //탄환 삭제
+        //총알제거
+        Bullet[] bullets = FindObjectsOfType<Bullet>();
+
+        for (int i = 0; i < bullets.Length; i++)
+        {
+            Destroy(bullets[i].gameObject); //Destroy(게임오브젝트) 게임오브젝트를 제거하는 기능
+        }
+
+        //클리어 타임 빠른 1, 2, 3위를 저장 표시하기
+        float num1 = PlayerPrefs.GetFloat("Num1", 999);
+        float num2 = PlayerPrefs.GetFloat("Num2", 999);
+        float num3 = PlayerPrefs.GetFloat("Num3", 999);
+
+        if (m_Score < num1)
+        {
+            num3 = num2;
+            num2 = num1;
+            num1 = m_Score;
+        }
+        else if (m_Score < num2)
+        {
+            num3 = num2;
+            num2 = m_Score;
+        }
+        else if (m_Score < num3)
+        {
+            num3 = m_Score;
+        }
+
+        PlayerPrefs.SetFloat("Num1", num1);
+        PlayerPrefs.SetFloat("Num2", num2);
+        PlayerPrefs.SetFloat("Num2", num3);
+        PlayerPrefs.Save();
+
+        m_ClearUI.text = string.Format("Game Clear\n 1위: {0}, 2위 : {1}, 3위: {2}", num1, num2, num3);
     }
+
+    //위에 적 비활성화하는거 간략하게 작성한것
+    //public void SetActivityAllGameObject(Type type, bool isActivity)
+    //{
+    //    var objects = FindObjectsOfType(type);
+    //    foreach (var obj in objects)
+    //    {
+    //        var gObj = (GameObject)obj;
+    //        gObj.SetActive(false);
+    //    }
+    //}
+
 
     public void ReturnToStartPoint()
     {

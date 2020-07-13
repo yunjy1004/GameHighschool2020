@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Trap2 : MonoBehaviour
 {
 
     public UnityEvent m_OnEnter;
+    public Text m_ClearUI;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -16,6 +18,7 @@ public class Trap2 : MonoBehaviour
             var player = other.attachedRigidbody.GetComponent<PlayerController_Dungeon2>();
             if (player != null)
                 m_OnEnter.Invoke();
+            m_ClearUI.gameObject.SetActive(true);
         }
     }
 
