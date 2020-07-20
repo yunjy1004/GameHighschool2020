@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/UniRun/Scenes/Level_UniRun.unity
+    guid: 3371a6f66ffdf1c4d85fe63ffa3fe2b2
   m_configObjects: {}
