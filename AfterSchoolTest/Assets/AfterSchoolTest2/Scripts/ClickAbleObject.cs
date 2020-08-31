@@ -20,4 +20,6 @@ public class ClickAbleObject : MonoBehaviour/*, IPointerDownHandler*/
     {
         Debug.Log("오브젝트를 눌렀습니다.");
     }
+
+
 }
