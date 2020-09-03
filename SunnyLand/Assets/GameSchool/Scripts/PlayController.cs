@@ -111,6 +111,12 @@ public class PlayController : MonoBehaviour
         {
             m_IsTouchLadder = true;
         }
+        else if(collision.tag == "Item")
+        {
+            var item = collision.GetComponent<ItemComponent>();
+            if(item != null)
+                item.PickUpItem();
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
