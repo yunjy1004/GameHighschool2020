@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent (typeof(Rigidbody2D))]
 public class HPComponent : MonoBehaviour
 {
-    public UnityEvent m_OnDie;
+    //public UnityEvent m_OnDie;
     public UnityEvent m_OnTakeDamage;
-    public UnityEvent m_OnTakeHeal;
+    //public UnityEvent m_OnTakeHeal;
 
     public virtual void TakeDamage(int damage)
     {

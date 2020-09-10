@@ -6858,9 +6858,12 @@ GameObject:
   - component: {fileID: 1277230142}
   - component: {fileID: 1277230141}
   - component: {fileID: 1277230140}
+  - component: {fileID: 1277230143}
+  - component: {fileID: 1277230144}
+  - component: {fileID: 1277230145}
   m_Layer: 0
   m_Name: BaseEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6877,15 +6880,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f998ccdd9a73a47498cdc76332a39700, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnDie:
-    m_PersistentCalls:
-      m_Calls: []
   m_OnTakeDamage:
     m_PersistentCalls:
-      m_Calls: []
-  m_OnTakeHeal:
-    m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1277230143}
+        m_MethodName: SpawnEffect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1277230140}
+        m_MethodName: DestroySelf
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!50 &1277230141
 Rigidbody2D:
   serializedVersion: 4
@@ -6923,6 +6942,54 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1277230143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1277230139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a63654067e372a47aba0605da97feab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectPrefab: {fileID: 6912266914652455653, guid: 7c478eb9d8643a545a8385a66c978c49,
+    type: 3}
+--- !u!114 &1277230144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1277230139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf997d76b8c48104d8cd03e8d4a2ec59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PatrolPos: {x: -5, y: 0, z: 0}
+  m_PatrolTerm: 2
+  m_Go: 1
+--- !u!95 &1277230145
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1277230139}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9aedd7643aedb0b4088f960f3722bbd5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1312003987
 GameObject:
   m_ObjectHideFlags: 0
@@ -7810,6 +7877,7 @@ GameObject:
   - component: {fileID: 1729365141}
   - component: {fileID: 1729365143}
   - component: {fileID: 1729365142}
+  - component: {fileID: 1729365144}
   m_Layer: 0
   m_Name: Sunny
   m_TagString: Untagged
@@ -7876,6 +7944,7 @@ MonoBehaviour:
   m_IsJumping: 0
   m_IsTouchLadder: 0
   m_IsClimbing: 0
+  isdamage: 0
 --- !u!212 &1729365142
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -7945,6 +8014,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1729365144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729365138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f998ccdd9a73a47498cdc76332a39700, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OnTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1756491753
 PrefabInstance:
   m_ObjectHideFlags: 0

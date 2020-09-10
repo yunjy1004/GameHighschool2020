@@ -89,6 +89,8 @@ public class PlayController : MonoBehaviour
         m_Animator.SetFloat("ClimbSpeed", Mathf.Abs(xAxis) + Mathf.Abs(yAxis));
     }
 
+    public bool isdamage = false;
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         foreach (ContactPoint2D contact in collision.contacts)
@@ -111,9 +113,17 @@ public class PlayController : MonoBehaviour
                     var hp = contact.rigidbody.GetComponent<HPComponent>();
                     if (hp)
                     {
-                        Destroy(hp.gameObject);
+                        //Destroy(hp.gameObject);
+                        hp.TakeDamage(10);
                     }
                 }
+            }
+            else if(contact.rigidbody && contact.rigidbody.tag == "Enemy")
+            {
+                var hp = GetComponent<HPComponent>();
+                hp.TakeDamage(10);
+
+                m_Animator.SetTrigger("TakeDamage");
             }
         }
         /*if (collision.gameObject.tag == "Ground")

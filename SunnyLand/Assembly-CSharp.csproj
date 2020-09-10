@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Assets\GameSchool\Scripts\Effect.cs" />
     <Compile Include="Assets\GameSchool\Scripts\EffectSpawner.cs" />
+    <Compile Include="Assets\GameSchool\Scripts\FlyPatrol.cs" />
     <Compile Include="Assets\GameSchool\Scripts\HPComponent.cs" />
     <Compile Include="Assets\GameSchool\Scripts\ItemComponent.cs" />
     <Compile Include="Assets\GameSchool\Scripts\JointArm.cs" />
