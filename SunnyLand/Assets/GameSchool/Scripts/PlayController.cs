@@ -20,6 +20,8 @@ public class PlayController : MonoBehaviour
     public bool m_IsTouchLadder = false;
     public bool m_IsClimbing = false;
 
+    public float m_HitRecoveringTime = 0;
+
     protected void Start()
     {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
@@ -30,6 +32,18 @@ public class PlayController : MonoBehaviour
     {
         float xAxis = Input.GetAxis("Horizontal");
         float yAxis = Input.GetAxis("Vertical");
+
+        m_HitRecoveringTime -= Time.deltaTime;
+        if(m_HitRecoveringTime > 0)
+        {
+            ClimbingExit();
+            m_Animator.SetBool("TakingDamage", true);
+            return;
+        }
+        else
+        {
+            m_Animator.SetBool("TakingDamage", false);
+        }
 
         Vector2 velocity = m_Rigidbody2D.velocity;
         velocity.x = xAxis * m_XAxisSpeed;
@@ -91,6 +105,7 @@ public class PlayController : MonoBehaviour
 
     public bool isdamage = false;
 
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         foreach (ContactPoint2D contact in collision.contacts)
@@ -119,11 +134,13 @@ public class PlayController : MonoBehaviour
                 }
             }
             else if(contact.rigidbody && contact.rigidbody.tag == "Enemy")
+                if(m_HitRecoveringTime <= 0) //피격시 무적
             {
                 var hp = GetComponent<HPComponent>();
                 hp.TakeDamage(10);
+                m_HitRecoveringTime = 1f;
 
-                m_Animator.SetTrigger("TakeDamage");
+                //m_Animator.SetTrigger("TakeDamage");
             }
         }
         /*if (collision.gameObject.tag == "Ground")

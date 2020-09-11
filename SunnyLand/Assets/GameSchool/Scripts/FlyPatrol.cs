@@ -5,15 +5,21 @@ using UnityEngine;
 public class FlyPatrol : MonoBehaviour
 {
     private Vector3 m_StartPps;
-    public Vector3 m_PatrolPos;
+
+    private Vector3 m_PatrolPos;
+
+    public Vector3 m_PatrolOffset;
     public float m_PatrolTerm = 2f;
 
     private float m_PatrolTime;
+
     public bool m_Go = true;
 
     public void Start()
     {
         m_StartPps = transform.position;
+
+        m_PatrolPos = transform.position + m_PatrolOffset;
     }
 
     void Update()
