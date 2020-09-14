@@ -22,6 +22,10 @@ public class FlyPatrol : MonoBehaviour
         m_PatrolPos = transform.position + m_PatrolOffset;
     }
 
+    public void ResetPatrolPos()
+    {
+        m_PatrolPos = transform.position + m_PatrolOffset;
+    }
     void Update()
     {
         m_PatrolTime += Time.deltaTime;

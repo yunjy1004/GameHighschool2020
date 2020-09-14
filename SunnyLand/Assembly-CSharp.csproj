@@ -69,6 +69,7 @@
     <Compile Include="Assets\GameSchool\Scripts\ItemComponent.cs" />
     <Compile Include="Assets\GameSchool\Scripts\JointArm.cs" />
     <Compile Include="Assets\GameSchool\Scripts\PlayController.cs" />
+    <Compile Include="Assets\GameSchool\Scripts\SpawnPoint.cs" />
     <Reference Include="UnityEngine">
       <HintPath>D:/UnityHub/Hub/Editor/2019.3.15f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
