@@ -10,6 +10,7 @@ public class JointArm : MonoBehaviour
 
     protected void Update()
     {
+        if(m_Target != null)
         transform.position = m_Target.position + m_Offset;
     }
 }

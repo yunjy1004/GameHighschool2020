@@ -26,7 +26,7 @@ public class SpawnPoint : MonoBehaviour
                 //}
                 SpawnMonster();
 
-                //m_SpawnTimer = 0;
+                m_SpawnTimer = 0;
             }
 
         }
