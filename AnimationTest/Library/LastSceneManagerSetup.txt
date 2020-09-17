@@ -1,0 +1,5 @@
+sceneSetups:
+- path: Assets/AnimationTest/Scenes/Level_AnimationTest.unity
+  isLoaded: 1
+  isActive: 1
+  isSubScene: 0

@@ -19,6 +19,9 @@ public class GameManager : MonoBehaviour
 
     public bool m_IsPlaying;
 
+    public VariableJoystick m_Joystick;
+    public UnityEngine.UI.Button m_JumpButton;
+
     public void GameStart()
     {
         var playerInstance = Instantiate(m_Player, m_StartPoint.position, m_StartPoint.rotation);
@@ -27,6 +30,11 @@ public class GameManager : MonoBehaviour
             hpComponent.m_OnDie.AddListener(GameOver);
 
         m_JointArm.m_Target = playerInstance.transform;
+
+        var playerController = playerInstance.GetComponent<PlayController>();
+        playerController.m_Joystick = m_Joystick;
+
+        m_JumpButton.onClick.AddListener(playerController.Jump);
     }
 
     public void Start()
