@@ -74,36 +74,64 @@ public class PlayerController : MonoBehaviour
             m_State = State.GroundWalk;
     }
 
+    public float m_JumpSpeed = 0;
+    public float m_Gravity = 5f;
+
     public void OnTick_GroundWalk()
     {
         float xAxis = Input.GetAxis("Horizontal");
         float yAxis = Input.GetAxis("Vertical");
+        bool inputJump = Input.GetKeyDown(KeyCode.C);
 
-        if (yAxis > 0)
+        if (inputJump)
         {
             m_State = State.Jump;
         }
 
-        if (yAxis > 0)
+        if (inputJump)
         {
-            Vector2 velocity = m_Rigidbody.velocity;
-            velocity.y = m_CurrentJumpSpeed;
-            m_Rigidbody.velocity = velocity;
+            m_JumpSpeed = m_CurrentJumpSpeed;
         }
 
-        if (xAxis < 0)
+        if (m_IsGround)
         {
-            m_Sprite.flipX = true;
+            m_JumpSpeed = 0;
         }
-        else if (xAxis > 0)
+        else
         {
-            m_Sprite.flipX = false;
+            m_JumpSpeed -= m_Gravity * Time.deltaTime;
+
+            if (m_JumpSpeed <= 10)
+                m_JumpSpeed = 10;
         }
 
-        //트랜스폼으로 이산적으로 움직임
         float xMovement = m_CurrentSpeed * xAxis * Time.deltaTime;
         Vector3 movement = Vector3.right * xMovement;
         transform.position += movement;
+
+        //구버젼
+        //if (yAxis > 0)
+        //{
+        //    m_State = State.Jump;
+        //}
+
+        //if (yAxis > 0)
+        //{
+        //    Vector2 velocity = m_Rigidbody.velocity;
+        //    velocity.y = m_CurrentJumpSpeed;
+        //    m_Rigidbody.velocity = velocity;
+        //}
+
+        //if (xAxis < 0)
+        //{
+        //    m_Sprite.flipX = true;
+        //}
+        //else if (xAxis > 0)
+        //{
+        //    m_Sprite.flipX = false;
+        //}
+
+        //트랜스폼으로 이산적으로 움직임
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
