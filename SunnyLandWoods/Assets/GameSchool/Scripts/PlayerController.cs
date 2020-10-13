@@ -9,7 +9,8 @@ public class PlayerController : MonoBehaviour
         None = 0,    //초기 상태
         Idle,
         Walking,
-        Jumping
+        Jumping,
+        Crouching,
     }
 
     public State m_State = State.None;
@@ -17,6 +18,8 @@ public class PlayerController : MonoBehaviour
     #region 참조
     public Rigidbody2D m_Rigidbody2D;
     public Animator m_Animator;
+    public Collider2D m_MovementCollider;
+    public Collider2D m_SideBlockCollider;
     #endregion //참조
 
     #region 상태값
@@ -26,6 +29,8 @@ public class PlayerController : MonoBehaviour
     public bool m_IsGround;
     public int m_AttachedGroundCount = 0;
     public List<GameObject> m_AttachedGround = new List<GameObject>();
+
+    public float m_CrouchTimer = 0;
     #endregion //상태값
 
     #region 입력값
@@ -39,6 +44,7 @@ public class PlayerController : MonoBehaviour
         m_Animator.ResetTrigger("Idle");
         m_Animator.ResetTrigger("Walking");
         m_Animator.ResetTrigger("Jumpping");
+        m_Animator.ResetTrigger("Crouch");
 
         switch (state)
         {
@@ -57,6 +63,12 @@ public class PlayerController : MonoBehaviour
             case State.Jumping:
                 {
                     m_Animator.SetTrigger("Jumpping");
+                }
+                break;
+            case State.Crouching:
+                {
+                    m_Animator.SetTrigger("Crouch");
+                    m_CrouchTimer = 0f;
                 }
                 break;
             default:
@@ -79,6 +91,10 @@ public class PlayerController : MonoBehaviour
             case State.Walking:
                 break;
             case State.Jumping:
+                break;
+            case State.Crouching:
+                m_MovementCollider.enabled = true;
+                m_SideBlockCollider.enabled = true;
                 break;
             default:
                 break;
@@ -110,11 +126,16 @@ public class PlayerController : MonoBehaviour
                     m_yAxis = Input.GetAxis("Vertical");
                 }
                 break;
+            case State.Crouching:
+                {
+                    m_xAxis = Input.GetAxis("Horizontal");
+                    m_yAxis = Input.GetAxis("Vertical");
+                }
+                break;
             default:
                 break;
         }
     }
-
 
     public void FixedUpdateProcess(State state)
     {
@@ -143,6 +164,11 @@ public class PlayerController : MonoBehaviour
                         m_Rigidbody2D.velocity = velocity;
                         ChangeState(State.Jumping);
                     }
+                    
+                    if(m_yAxis <= -0.2f)
+                    {
+                        ChangeState(State.Crouching);
+                    }
                 }
                 break;
             case State.Walking:
@@ -170,14 +196,44 @@ public class PlayerController : MonoBehaviour
                 break;
             case State.Jumping:
                 {
+                    if (Mathf.Abs(m_xAxis) > 0.1f)
+                    {
+                        Vector2 velocity = m_Rigidbody2D.velocity;
+                        velocity.x = m_xAxis * m_MovementSpeed;
+                        m_Rigidbody2D.velocity = velocity;
+                    }
+
                     //땅에 닫고 있고,
                     //떨어지고 있을 경우에
-                    if(m_AttachedGroundCount >= 1 && m_Rigidbody2D.velocity.y <= 0)
+                    if (m_AttachedGroundCount >= 1 && m_Rigidbody2D.velocity.y <= 0)
                     {
                         if (Mathf.Abs(m_xAxis) <= 0.1f)
                             ChangeState(State.Idle);
                         else
                             ChangeState(State.Walking);
+                    }
+                }
+                break;
+            case State.Crouching:
+                {
+                    if(m_yAxis >= 0)
+                    {
+                        ChangeState(State.Idle);
+                    }
+
+                    m_CrouchTimer += Time.fixedDeltaTime;
+
+                    if (m_CrouchTimer >= 2f && m_CrouchTimer <= 90f)
+                    {
+                        m_MovementCollider.enabled = false;
+                        m_SideBlockCollider.enabled = false;
+
+                        m_CrouchTimer = 100f;
+                    }
+                    else if(m_CrouchTimer >= 100.3f)
+                    {
+                        m_MovementCollider.enabled = true;
+                        m_SideBlockCollider.enabled = true;
                     }
                 }
                 break;
@@ -257,13 +313,36 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.collider.tag == "Ground")
+        if (collision.collider.tag == "Ground")
         {
             //부닥친 모든 부분 중
             foreach (var contact in collision.contacts)
             {
                 //밟은 부분이 아래라면
-                if (contact.normal.y >= 1)
+                if (contact.normal.y >= 0.5f)
+                {
+                    //밟고 있는 땅에 대한 중복처리
+                    if (!m_AttachedGround.Contains(collision.collider.gameObject))
+                        m_AttachedGround.Add(collision.collider.gameObject);
+
+                    break;
+                }
+            }
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.collider.tag == "Ground")
+        {
+            if (m_AttachedGround.Contains(collision.collider.gameObject))
+                m_AttachedGround.Remove(collision.collider.gameObject);
+
+            //부닥친 모든 부분 중
+            foreach (var contact in collision.contacts)
+            {
+                //밟은 부분이 아래라면
+                if (contact.normal.y >= 0.5f)
                 {
                     //밟고 있는 땅에 대한 중복처리
                     if (!m_AttachedGround.Contains(collision.collider.gameObject))
