@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - Movement
   - SideBlock
   - 
-  - 
-  - 
+  - AttackBox
+  - HitBox
   - 
   - 
   - 
