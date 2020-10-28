@@ -26,25 +26,29 @@ public class EventTrigger2D : MonoBehaviour
     {
         if((m_Mask & Mask.Player) == Mask.Player)   //플러그 참일 경우 처리,
         {
-            if (collision.attachedRigidbody.tag == "Player")
+            if (collision.attachedRigidbody != null 
+                && collision.attachedRigidbody.tag == "Player")
                 m_OnTriggerEnter.Invoke();
         }
 
         if((m_Mask & Mask.Enemy) == Mask.Enemy)
         {
-            if (collision.attachedRigidbody.tag == "Enemy")
+            if (collision.attachedRigidbody != null
+                && collision.attachedRigidbody.tag == "Enemy")
                 m_OnTriggerEnter.Invoke();
         }
 
         if ((m_Mask & Mask.Ect) == Mask.Ect)
         {
-            if (collision.attachedRigidbody.tag == "Ect")
+            if (collision.attachedRigidbody != null
+                && collision.attachedRigidbody.tag == "Ect")
                 m_OnTriggerEnter.Invoke();
         }
 
         if ((m_Mask & Mask.Ground) == Mask.Ground)
         {
-            if (collision.attachedRigidbody.tag == "Ground")
+            if (collision.attachedRigidbody != null
+                && collision.attachedRigidbody.tag == "Ground")
                 m_OnTriggerEnter.Invoke();
         }
     }
@@ -53,25 +57,29 @@ public class EventTrigger2D : MonoBehaviour
     {
         if ((m_Mask & Mask.Player) == Mask.Player)   //플러그 참일 경우 처리,
         {
-            if (collision.attachedRigidbody.tag == "Player")
+            if (collision.attachedRigidbody != null
+                && collision.attachedRigidbody.tag == "Player")
                 m_OnTriggerStay.Invoke();
         }
 
         if ((m_Mask & Mask.Enemy) == Mask.Enemy)
         {
-            if (collision.attachedRigidbody.tag == "Enemy")
+            if (collision.attachedRigidbody != null
+                && collision.attachedRigidbody.tag == "Enemy")
                 m_OnTriggerStay.Invoke();
         }
 
         if ((m_Mask & Mask.Ect) == Mask.Ect)
         {
-            if (collision.attachedRigidbody.tag == "Ect")
+            if (collision.attachedRigidbody != null
+                && collision.attachedRigidbody.tag == "Ect")
                 m_OnTriggerStay.Invoke();
         }
 
         if ((m_Mask & Mask.Ground) == Mask.Ground)
         {
-            if (collision.attachedRigidbody.tag == "Ground")
+            if (collision.attachedRigidbody != null
+                && collision.attachedRigidbody.tag == "Ground")
                 m_OnTriggerStay.Invoke();
         }
     }
@@ -80,25 +88,29 @@ public class EventTrigger2D : MonoBehaviour
     {
         if ((m_Mask & Mask.Player) == Mask.Player)   //플러그 참일 경우 처리,
         {
-            if (collision.attachedRigidbody.tag == "Player")
+            if (collision.attachedRigidbody != null
+                && collision.attachedRigidbody.tag == "Player")
                 m_OnTriggerExit.Invoke();
         }
 
         if ((m_Mask & Mask.Enemy) == Mask.Enemy)
         {
-            if (collision.attachedRigidbody.tag == "Enemy")
+            if (collision.attachedRigidbody != null
+                && collision.attachedRigidbody.tag == "Enemy")
                 m_OnTriggerExit.Invoke();
         }
 
         if ((m_Mask & Mask.Ect) == Mask.Ect)
         {
-            if (collision.attachedRigidbody.tag == "Ect")
+            if (collision.attachedRigidbody != null
+                && collision.attachedRigidbody.tag == "Ect")
                 m_OnTriggerExit.Invoke();
         }
 
         if ((m_Mask & Mask.Ground) == Mask.Ground)
         {
-            if (collision.attachedRigidbody.tag == "Ground")
+            if (collision.attachedRigidbody != null
+                && collision.attachedRigidbody.tag == "Ground")
                 m_OnTriggerExit.Invoke();
         }
     }
