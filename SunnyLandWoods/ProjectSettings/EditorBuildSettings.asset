@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/GameSchool_KimHungKyu/Scenes/TestLevel_Movement.unity
+    guid: bb858d1da7cde6c4d982b85d1074212d
   m_configObjects: {}
