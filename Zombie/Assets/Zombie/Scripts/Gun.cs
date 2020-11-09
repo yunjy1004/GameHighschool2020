@@ -45,6 +45,8 @@ public class Gun : MonoBehaviour {
 
     private void OnEnable() {
         // 총 상태 초기화
+        //탄창 크기에 맞춰 탄창에 총알을 가득채운다.
+        magAmmo = magCapacity;
         bulletLineRenderer.enabled = false;
     }
 
@@ -55,10 +57,16 @@ public class Gun : MonoBehaviour {
         //마지막으로 총을 쏜시간 + 공격딜레이 보다 현재 시간이 더 오래되었으면
         if (lastFireTime + timeBetFire <= Time.time)
         {
-            Shot();
+            if (magAmmo > 0)
+            {
+                Shot();
 
-            //마지막으로 총을 쏜 시간은 현재.
-            lastFireTime = Time.time;
+                //총알을 쏠떄마다 탄창의 총알은 1씩 소모
+                magAmmo -= 1;
+
+                //마지막으로 총을 쏜 시간은 현재.
+                lastFireTime = Time.time;
+            }
 
         }
     }
@@ -72,6 +80,17 @@ public class Gun : MonoBehaviour {
         if (isHit)
         {
             hitPosition = hitInfo.point;
+
+            IDamageable[] damageables;
+            if (hitInfo.rigidbody != null)
+                damageables = hitInfo.rigidbody.GetComponents<IDamageable>();
+            else
+                damageables = hitInfo.collider.GetComponents<IDamageable>();
+
+            foreach(var damageable in damageables)
+            {
+                damageable.OnDamage(damage, hitPosition, hitInfo.normal);
+            }
         }
         else
         {
@@ -111,7 +130,40 @@ public class Gun : MonoBehaviour {
 
     // 재장전 시도
     public bool Reload() {
-        return false;
+
+        //탄창에 총알이 전부 채워져 있다면,false리턴
+        if(magAmmo >= magCapacity)
+        {
+            return false;
+        }
+        else if(ammoRemain <= 0)
+        {
+            return false;
+        }
+
+        //탄창에 총알이 전부 채워져 있지 않다면
+        else
+        {
+            //탄창에 총알을 채워넣는다
+            //그리도 true 리턴
+
+            //남아있는 총알 수 (ammoRemain)가 "탄창에 넣어야할 총알 수()"보다 크다면
+            int reqiredAmmo = magCapacity - magAmmo;
+            if (ammoRemain >= reqiredAmmo)
+            {
+                //탄창을 꽉채우고
+                magAmmo = magCapacity;
+                ammoRemain -= reqiredAmmo;
+            }
+            else
+            {
+                //만약 그렇지 않다면
+                //탄창에는 남아있는 총알 수 만큼 탄창을 채운다.
+                magAmmo = ammoRemain;
+                ammoRemain = 0;
+            }
+            return true;
+        }
     }
 
     // 실제 재장전 처리를 진행
