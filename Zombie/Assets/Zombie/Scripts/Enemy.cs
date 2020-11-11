@@ -39,6 +39,9 @@ public class Enemy : LivingEntity {
 
     private void Awake() {
         // 초기화
+        enemyAnimator = GetComponent<Animator>();
+        enemyAudioPlayer = GetComponent<AudioSource>();
+        enemyRenderer = GetComponent<Renderer>();
     }
 
     // 적 AI의 초기 스펙을 결정하는 셋업 메서드
@@ -69,12 +72,33 @@ public class Enemy : LivingEntity {
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal) {
         // LivingEntity의 OnDamage()를 실행하여 데미지 적용
         base.OnDamage(damage, hitPoint, hitNormal);
+
+        var effect = hitEffect;
+        effect.transform.position = hitPoint;
+        effect.transform.forward = hitNormal;
+        effect.GetComponent<ParticleSystem>().Play();
+
+        if (!dead)
+        {
+            enemyAudioPlayer.clip = hitSound;
+            enemyAudioPlayer.Play();
+        }
     }
 
     // 사망 처리
     public override void Die() {
         // LivingEntity의 Die()를 실행하여 기본 사망 처리 실행
         base.Die();
+
+        enemyAudioPlayer.clip = deathSound;
+        enemyAudioPlayer.Play();
+
+        enemyAnimator.SetTrigger("Die");
+
+
+        //임시 : 플레이어릐 공격이 사망시 관통할 수있게 충동체를 제거하고, 충돌체 제거시 중력에 의해 떨어지는 현상을 제가함
+        GetComponent<Rigidbody>().isKinematic = true;
+        GetComponent<Collider>().enabled = false;
     }
 
     private void OnTriggerStay(Collider other) {

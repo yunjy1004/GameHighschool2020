@@ -22,6 +22,10 @@ public class PlayerHealth : LivingEntity
     private void Awake()
     {
         // 사용할 컴포넌트를 가져오기
+        playerAudioPlayer = GetComponent<AudioSource>();
+        playerAnimator = GetComponent<Animator>();
+        playerMovement = GetComponent<PlayerMovement>();
+        playerShooter = GetComponent<PlayerShooter>();
     }
 
     protected override void OnEnable()
@@ -30,6 +34,9 @@ public class PlayerHealth : LivingEntity
         base.OnEnable();
 
         RefreshHP();
+
+        playerMovement.enabled = true;
+        playerShooter.enabled = true;
     }
 
     // 체력 회복
@@ -51,7 +58,14 @@ public class PlayerHealth : LivingEntity
         effect.transform.position = hitPoint;
         effect.transform.forward = hitDirection;
         effect.GetComponent<ParticleSystem>().Play();
+
         RefreshHP();
+
+        if (!dead)
+        {
+            playerAudioPlayer.clip = hitClip;
+            playerAudioPlayer.Play();
+        }
     }
 
     // 사망 처리
@@ -59,6 +73,14 @@ public class PlayerHealth : LivingEntity
     {
         // LivingEntity의 Die() 실행(사망 적용)
         base.Die();
+
+        playerAudioPlayer.clip = deathClip;
+        playerAudioPlayer.Play();
+
+        playerAnimator.SetTrigger("Die");
+
+        playerMovement.enabled = false;
+        playerShooter.enabled = false;
     }
 
     private void OnTriggerEnter(Collider other)
