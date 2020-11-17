@@ -21,29 +21,57 @@ public class PlayerMovement : MonoBehaviour {
     private void FixedUpdate() {
         // 물리 갱신 주기마다 움직임, 회전, 애니메이션 처리 실행
 
-        //앞뒤 움직임
         Move();
-        //조우 회전
+
         Rotate();
 
-        playerAnimator.SetFloat("Move", playerInput.move);
+        playerAnimator.SetFloat("Move", playerInput.move + playerInput.rotate);
     }
 
     // 입력값에 따라 캐릭터를 앞뒤로 움직임
     private void Move() {
+        var forward = Camera.main.transform.forward;
+        forward.y = 0;
+        forward.Normalize();
+
+        var right = Camera.main.transform.right;
+        right.y = 0;
+        right.Normalize();
+
+        transform.position += forward 
+            * moveSpeed * Time.fixedDeltaTime 
+            * playerInput.move;
+
+        transform.position += right 
+            * moveSpeed * Time.fixedDeltaTime 
+            * playerInput.rotate;
+
+
+        return;
+        //hack;
         //앞뒤 움직임
-        transform.position
-            += transform.forward
-               * moveSpeed * Time.fixedDeltaTime
-               * playerInput.move;
+        //transform.position
+        //    += transform.forward
+        //       * moveSpeed * Time.fixedDeltaTime
+        //       * playerInput.move;
     }
 
     // 입력값에 따라 캐릭터를 좌우로 회전
     private void Rotate() {
-        //조우 회전
-        transform.Rotate(0,
-            rotateSpeed * Time.fixedDeltaTime * playerInput.rotate,
-            0);
 
+        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane plane = new Plane(Vector3.up, 0);
+        float enter;
+        plane.Raycast(ray, out enter);
+        var point = ray.GetPoint(enter);
+        transform.LookAt(point);
+
+
+        //좌 회전
+        return;
+        //hack;
+        //transform.Rotate(0,
+        //    rotateSpeed * Time.fixedDeltaTime * playerInput.rotate,
+        //    0);
     }
 }

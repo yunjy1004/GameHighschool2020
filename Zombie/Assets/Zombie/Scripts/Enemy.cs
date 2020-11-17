@@ -60,7 +60,7 @@ public class Enemy : LivingEntity {
         enemyAnimator.SetBool("HasTarget", hasTarget);
 
         //추격
-        //if(targetEntity != null && !targetEntity.dead)
+        //if(targetEntity != null)
         //{
         //    var offset = targetEntity.transform.position - transform.position;
         //    var direction = offset.normalized;
@@ -77,11 +77,12 @@ public class Enemy : LivingEntity {
             // 0.25초 주기로 처리 반복
             yield return new WaitForSeconds(0.25f);
 
+            //타격 검색
             var player = FindObjectOfType<PlayerHealth>();
             targetEntity = player;
-            if (targetEntity != null)
+            if(targetEntity != null)
                 pathFinder.SetDestination(targetEntity.transform.position);
-            else if (targetEntity.dead || targetEntity == null)
+            else if(targetEntity.dead || targetEntity == null)
                 pathFinder.SetDestination(transform.position);
         }
     }
@@ -111,52 +112,55 @@ public class Enemy : LivingEntity {
         enemyAudioPlayer.clip = deathSound;
         enemyAudioPlayer.Play();
 
+        //사망 애니메이션 동작.
         enemyAnimator.SetTrigger("Die");
 
-
-        //임시 : 플레이어릐 공격이 사망시 관통할 수있게 충동체를 제거하고, 충돌체 제거시 중력에 의해 떨어지는 현상을 제가함
+        //임시 : 플레이어의 공격이 사망시 관통할 수 있게
+        //충돌체를 제거하고,
+        //충돌체 제거시 중력에 의해 떨어지는 현상을 제거함.
         GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<Collider>().enabled = false;
+
+        /*추가*/ GameManager.instance.AddScore(100);
+        FindObjectOfType<EnemySpawner>().RemoveEnemy(this);
     }
 
-    private void OnTriggerStay(Collider other) {
-        // 트리거 충돌한 상대방 게임 오브젝트가 추적 대상이라면 공격 실행   
+    private void OnTriggerStay(Collider other) 
+    {
+        // 트리거 충돌한 상대방 게임 오브젝트가 추적 대상이라면 공격 실행
 
-        //만약, other.attachedRigidbody가 없다면,
+        //만약, other.attachedRigidbody가 없다면, 
         //동작하지 않음
         if (other.attachedRigidbody == null)
             return;
 
-        //other.attachedRigidbody에
-        //LivingEntity가 targetEntity와 같다면,
-        LivingEntity livingEntity
+        //other.attachedRigidbody에 //LivingEntity가 targetEntity와 같다면,
+        LivingEntity livingEntity 
             = other.attachedRigidbody.GetComponent<LivingEntity>();
 
+        //5.번 정답
         if (livingEntity.dead)
             return;
 
         if (dead)
             return;
-
-        if(livingEntity != null && livingEntity == targetEntity)
+            
+        if (livingEntity != null && livingEntity == targetEntity)
         {
-        //공격할 타이밍인지 체크
-        //만약 공격 딜레이가 아니라면 동작을 호출함
-        //마지막 공격 시간 + 공격 딜레이의 시간
-        //현재 시간이 더 나중이면  공격
-        if(lastAttackTime + timeBetAttack <= Time.time)
+            //공격할 타이밍인지 체크//만약 공격 딜레이가 아니라면 동작을 호출함. //마지막 공격 시간 + 공격 딜레이의 시간보다 //현재 시간이 더 나중이면 공격
+            if(lastAttackTime + timeBetAttack <= Time.time)
             {
                 //공격
-                Vector3 hitPosition = livingEntity.transform.position + Vector3.up;
+                Vector3 hitPosition 
+                    = livingEntity.transform.position + Vector3.up;
 
-                Vector3 hitDirection = livingEntity.transform.position - transform.position;
+                Vector3 hitDirection
+                    = transform.position - livingEntity.transform.position;
 
                 livingEntity.OnDamage(damage, hitPosition, hitDirection);
 
                 lastAttackTime = Time.time;
             }
-
         }
-
     }
 }

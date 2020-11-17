@@ -46,40 +46,48 @@ public class EnemySpawner : MonoBehaviour {
 
     // 현재 웨이브에 맞춰 적을 생성
     private void SpawnWave() {
-        CreateEnemy(0);
+        wave++;
+
+        for(int i=0; i<wave; i++)
+            CreateEnemy(0);
     }
 
     // 적을 생성하고 생성한 적에게 추적할 대상을 할당
-    private void CreateEnemy(float intensity) {
-
+    private void CreateEnemy(float intensity) 
+    {
         var spawnPointNum = Random.Range(0, spawnPoints.Length - 1);
         var spawnPoint = spawnPoints[spawnPointNum];
 
         var enemy = Instantiate<Enemy>(
-            enemyPrefab,                                        //스폰할 에너미 프리팹
-            spawnPoint.position,                                //스폰할 위치
-            Quaternion.LookRotation(spawnPoint.forward));       //스폰시 회전값(spawnPoint)
+            enemyPrefab,                                    //스폰할 에너미 프리팹
+            spawnPoint.position,                            //스폰할 위치
+            Quaternion.LookRotation(spawnPoint.forward));   //스폰시 회전값(spawnPoint의 정면보도록 회전) 
 
-        //10%활률로 강화된 좀비가 소환(빨강 좀비는 3배 빠르고 3배 단단하며 3배 데미지가 높다)
-        if (Random.Range(0, 100f) <= 10f)
+        //10% 확률로 강화된 좀비가 소환(빨강 좀비는 3배는 빠르고, 3배는 단단하며, 3배는 데미지가 높다.
+        if(Random.Range(0,100f) <= 10f)
         {
             enemy.Setup(
-            Random.Range(healthMin, healthMax) * 3,
-            Random.Range(damageMin, damageMax) * 3,
-            Random.Range(speedMin, speedMax) * 3,
-            strongEnemyColor);
-
+                Random.Range(healthMin, healthMax) * 3,
+                Random.Range(damageMin, damageMax) * 3,
+                Random.Range(speedMin, speedMax) * 3,
+                strongEnemyColor);
         }
         //그 외에는 일반 좀비가 소환
         else
         {
             enemy.Setup(
-            Random.Range(healthMin, healthMax),
-            Random.Range(damageMin, damageMax),
-            Random.Range(speedMin, speedMax),
-            Color.white);
+                Random.Range(healthMin, healthMax),
+                Random.Range(damageMin, damageMax),
+                Random.Range(speedMin, speedMax),
+                Color.white);
         }
 
         enemies.Add(enemy);
+
+    }
+
+    public void RemoveEnemy(Enemy enemy)
+    {
+        enemies.Remove(enemy);
     }
 }
