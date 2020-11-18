@@ -38,13 +38,24 @@ public class PlayerMovement : MonoBehaviour {
         right.y = 0;
         right.Normalize();
 
-        transform.position += forward 
-            * moveSpeed * Time.fixedDeltaTime 
-            * playerInput.move;
+        var rigidbody = GetComponent<Rigidbody>();
 
-        transform.position += right 
-            * moveSpeed * Time.fixedDeltaTime 
-            * playerInput.rotate;
+        Vector3 v = new Vector3();
+
+        v += forward * moveSpeed * playerInput.move;
+
+        v += right * moveSpeed * playerInput.rotate;
+
+        rigidbody.velocity = v;
+        return;
+
+        //transform.position += forward 
+        //    * moveSpeed * Time.fixedDeltaTime 
+        //    * playerInput.move;
+
+        //transform.position += right 
+        //    * moveSpeed * Time.fixedDeltaTime 
+        //    * playerInput.rotate;
 
 
         return;
@@ -65,6 +76,10 @@ public class PlayerMovement : MonoBehaviour {
         plane.Raycast(ray, out enter);
         var point = ray.GetPoint(enter);
         transform.LookAt(point);
+        var eulerAngles = transform.eulerAngles;
+        eulerAngles.x = 0;
+        eulerAngles.z = 0;
+        transform.eulerAngles = eulerAngles;
 
 
         //좌 회전
