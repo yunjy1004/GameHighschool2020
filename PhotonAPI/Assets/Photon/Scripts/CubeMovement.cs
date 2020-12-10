@@ -13,9 +13,7 @@ public class CubeMovement : MonoBehaviour
         m_PhotonView = GetComponent<PhotonView>();
     }
 
-    // Update is called once per frame
     private Vector3 m_OldPosition;
-
     void Update()
     {
         if (m_PhotonView.IsMine || !m_PhotonView.IsMine)
@@ -32,14 +30,13 @@ public class CubeMovement : MonoBehaviour
 
         if(m_OldPosition != transform.position)
         {
-            m_PhotonView.RPC("Move", RpcTarget.AllBuffered, transform.position, transform.rotation);
+            m_PhotonView.RPC("Move", RpcTarget.AllBuffered, 
+                transform.position, transform.rotation);
         }
 
         m_OldPosition = transform.position;
     }
-
     [PunRPC]
-
     public void Move(Vector3 pos, Quaternion rot)
     {
         transform.position = pos;
@@ -50,35 +47,19 @@ public class CubeMovement : MonoBehaviour
     private void OnMouseDown()
     {
         float r, g, b;
-
+        
         r = Random.Range(0, 1f);
         g = Random.Range(0, 1f);
         b = Random.Range(0, 1f);
 
         m_PhotonView.RPC("ColorRandomSwitch", RpcTarget.AllBuffered, r, g, b);
-
-        //이렇게도 가능(ColorRandomSwitch2)를 써서 위에 코드와 똑같이 할수있다.
-        //Color color = new Color();
-        //color.r = Random.Range(0, 1f);
-        //color.g = Random.Range(0, 1f);
-        //color.b = Random.Range(0, 1f);
-
-        //m_PhotonView.RPC("ColorRandomSwitch", RpcTarget.AllBuffered, color);
     }
 
     [PunRPC]
-
     public void ColorRandomSwitch(float r, float g, float b)
     {
         Renderer renderer = GetComponent<Renderer>();
         renderer.material.color = new Color(r, g, b);
     }
-
-    //[PunRPC]
-    //public void ColorRandomSwitch2(object color)
-    //{
-    //    var _color = color as Color;
-    //}
-
 
 }

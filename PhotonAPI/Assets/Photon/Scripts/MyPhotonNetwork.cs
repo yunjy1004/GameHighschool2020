@@ -7,7 +7,6 @@ using Photon.Realtime;
 
 public class MyPhotonNetwork : MonoBehaviourPunCallbacks
 {
-
     public override void OnConnected()
     {
         Debug.Log("OnConnected");
@@ -15,7 +14,7 @@ public class MyPhotonNetwork : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        Debug.Log("OnDisconnected");
+        Debug.Log("OnDisConnected");
     }
 
     public void OnClickConnect()
@@ -28,6 +27,7 @@ public class MyPhotonNetwork : MonoBehaviourPunCallbacks
     {
         Photon.Pun.PhotonNetwork.Disconnect();
     }
+
 
     public override void OnConnectedToMaster()
     {
