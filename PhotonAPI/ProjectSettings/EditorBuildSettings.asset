@@ -7,8 +7,8 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Photon/Scenes/Level_Login.unity
-    guid: 32792c4e1a9e116428c7228b60d47a47
+    guid: 42f6e51261ad5374f9ebebffbf85ef35
   - enabled: 1
-    path: Assets/Photon/Scenes/Level_Test1.unity
-    guid: b6bf265fafc367c4a806fdff6179d004
+    path: Assets/Photon/Scenes/Level_FiveInARow.unity
+    guid: fb8681818e753eb419c476d3f393c69a
   m_configObjects: {}

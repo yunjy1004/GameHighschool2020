@@ -48,6 +48,6 @@ public class MyPhotonNetwork : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
 
-        PhotonNetwork.LoadLevel("Level_Test1");
+        PhotonNetwork.LoadLevel("Level_FiveInARow");
     }
 }
