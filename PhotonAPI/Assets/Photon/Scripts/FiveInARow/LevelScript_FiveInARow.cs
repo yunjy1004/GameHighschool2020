@@ -5,6 +5,8 @@ using Photon;
 using Photon.Pun;
 using Photon.Realtime;
 
+using UnityEngine.UI;
+
 public enum Side
 {
     Red,    //레드 플레이어 소속 
@@ -21,6 +23,12 @@ public enum Turn
 public class LevelScript_FiveInARow : 
     MonoBehaviourPunCallbacks
 {
+
+    public Text m_PlayerUI;
+    public Text m_TurnUI;
+    public GameObject m_WinnerPanel;
+    public Text m_WinnerUI;
+
     public Turn m_Turn;
 
     public Point[,] m_Board = new Point[21, 21];
@@ -57,12 +65,23 @@ public class LevelScript_FiveInARow :
             //수정
             player.photonView.RPC("SetPlayerInfo", RpcTarget.AllBuffered, 
                 "Player_Red", (int)Side.Red);
+
+            m_PlayerUI.text = "Player Red";
         }
         else
         {
             //수정
             player.photonView.RPC("SetPlayerInfo", RpcTarget.AllBuffered,
                 "Player_Blue", (int)Side.Blue);
+
+            m_PlayerUI.text = "Player Blue";
+        }
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("SetTurnUI", RpcTarget.AllBuffered, (int)m_Turn);
+            //시작했을때 2사림이 입장을 안했다면 레디
+            photonView.RPC("SetWinnerUI", RpcTarget.AllBuffered, true, "Ready!");
         }
     }
 
@@ -74,8 +93,10 @@ public class LevelScript_FiveInARow :
         base.OnPlayerEnteredRoom(newPlayer);
 
         //해당 PC가 호스트일 경우,
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && PhotonNetwork.PlayerList.Length == 2)
         {
+            //2사람이 입장했다면 Panel제거해서 게임이 시작
+            photonView.RPC("SetWinnerUI", RpcTarget.AllBuffered, false, "Ready!");
         }
     }
 
@@ -102,6 +123,9 @@ public class LevelScript_FiveInARow :
                 if (CheckVictory(side, pos))
                 {
                     Debug.Log("victory : " + side);
+
+                    //승패가 나면 Panel 활성화해주고 누가 승리했는지 출력
+                    photonView.RPC("SetWinnerUI", RpcTarget.AllBuffered, true, "Winner : " + side.ToString());
                 }
 
                 NextTurn();
@@ -114,10 +138,12 @@ public class LevelScript_FiveInARow :
         if(m_Turn == Turn.Red)
         {
             m_Turn = Turn.Blue;
+            photonView.RPC("SetTurnUI", RpcTarget.AllBuffered, (int)m_Turn);
         }
         else if(m_Turn == Turn.Blue)
         {
             m_Turn = Turn.Red;
+            photonView.RPC("SetTurnUI", RpcTarget.AllBuffered, (int)m_Turn);
         }
     }
 
@@ -302,5 +328,18 @@ public class LevelScript_FiveInARow :
         }
 
         return result;
+    }
+
+    [PunRPC]
+    public void SetTurnUI(int side)
+    {
+        m_TurnUI.text = string.Format("Turn : {0}", ((Side)side).ToString());
+    }
+
+    [PunRPC]
+    public void SetWinnerUI(bool activity, string message)
+    {
+        m_WinnerPanel.SetActive(activity);
+        m_WinnerUI.text = message;
     }
 }
