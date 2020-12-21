@@ -31,24 +31,45 @@ public class PlayerMovement : MonoBehaviourPun {
         Move();
 
         // 입력값에 따라 애니메이터의 Move 파라미터 값을 변경
-        playerAnimator.SetFloat("Move", playerInput.move);
+        playerAnimator.SetFloat("Move", playerInput.move + playerInput.rotate);
     }
 
     // 입력값에 따라 캐릭터를 앞뒤로 움직임
     private void Move() {
-        // 상대적으로 이동할 거리 계산
-        Vector3 moveDistance =
-            playerInput.move * transform.forward * moveSpeed * Time.deltaTime;
-        // 리지드바디를 통해 게임 오브젝트 위치 변경
-        playerRigidbody.MovePosition(playerRigidbody.position + moveDistance);
+
+        var forward = Camera.main.transform.forward;
+        forward.y = 0;
+        forward.Normalize();
+
+        var right = Camera.main.transform.right;
+        right.y = 0;
+        right.Normalize();
+
+        var rigidbody = GetComponent<Rigidbody>();
+
+        Vector3 v = new Vector3();
+
+        v += forward * moveSpeed * playerInput.move;
+
+        v += right * moveSpeed * playerInput.rotate;
+
+        rigidbody.velocity = v;
+        return;
     }
 
     // 입력값에 따라 캐릭터를 좌우로 회전
     private void Rotate() {
-        // 상대적으로 회전할 수치 계산
-        float turn = playerInput.rotate * rotateSpeed * Time.deltaTime;
-        // 리지드바디를 통해 게임 오브젝트 회전 변경
-        playerRigidbody.rotation =
-            playerRigidbody.rotation * Quaternion.Euler(0, turn, 0f);
+        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane plane = new Plane(Vector3.up, 0);
+        float enter;
+        plane.Raycast(ray, out enter);
+        var point = ray.GetPoint(enter);
+        transform.LookAt(point);
+        var eulerAngles = transform.eulerAngles;
+        eulerAngles.x = 0;
+        eulerAngles.z = 0;
+        transform.eulerAngles = eulerAngles;
+
+        return;
     }
 }
